@@ -72,14 +72,14 @@ export function StickySmsWidget() {
             initial={{ opacity: 0, y: 24, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.96 }}
-            transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
-            className="fixed bottom-6 right-6 z-50 w-full max-w-sm overflow-hidden rounded-2xl shadow-2xl shadow-black/40 glass-strong"
+            transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+            className="glass-panel fixed bottom-6 right-6 z-50 w-full max-w-sm overflow-hidden rounded-3xl"
           >
-            <div className="h-1 w-full bg-gradient-to-r from-[#00d4ff] to-[#0088ff]" aria-hidden />
-            <div className="flex items-center justify-between border-b border-white/10 bg-white/[0.03] px-4 py-3">
-              <span className="flex items-center gap-2 font-semibold text-white">
-                <span className="rounded-lg bg-[#00d4ff]/15 p-1.5">
-                  <MessageCircle className="h-4 w-4 text-[#00d4ff]" aria-hidden />
+            <div className="h-[2px] w-full bg-gradient-to-r from-[var(--accent)] via-sky-300 to-[var(--accent-secondary)]" aria-hidden />
+            <div className="flex items-center justify-between border-b border-white/[0.06] px-5 py-3.5">
+              <span className="flex items-center gap-2.5 text-sm font-semibold text-white">
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--accent)]/[0.08] ring-1 ring-[var(--accent)]/10">
+                  <MessageCircle className="h-3.5 w-3.5 text-[var(--accent)]" aria-hidden />
                 </span>
                 Text us
               </span>
@@ -95,13 +95,13 @@ export function StickySmsWidget() {
                     setError("");
                   }
                 }}
-                className="rounded-lg p-1.5 text-zinc-500 transition hover:bg-white/10 hover:text-white"
+                className="rounded-lg p-1.5 text-slate-500 transition hover:bg-white/[0.05] hover:text-white"
                 aria-label="Close"
               >
                 <X className="h-5 w-5" aria-hidden />
               </button>
             </div>
-            <div className="p-4">
+            <div className="p-5">
               {sent ? (
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
@@ -111,8 +111,8 @@ export function StickySmsWidget() {
                   aria-live="polite"
                 >
                   <p className="font-semibold text-white">Message sent.</p>
-                  <p className="mt-1.5 text-sm text-zinc-400">
-                    We'll reply at this number within ~3 minutes.
+                  <p className="mt-1.5 text-sm text-slate-400">
+                    We&apos;ll reply at this number within ~3 minutes.
                   </p>
                 </motion.div>
               ) : (
@@ -130,7 +130,7 @@ export function StickySmsWidget() {
                       placeholder="Your name"
                       disabled={submitting}
                       maxLength={200}
-                      className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-white placeholder-zinc-600 outline-none transition-all duration-200 focus:border-[#00d4ff] focus:ring-2 focus:ring-[#00d4ff]/25 disabled:opacity-60"
+                      className="w-full rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-2.5 text-white placeholder-slate-600 outline-none transition-all duration-300 focus:border-[var(--accent)]/40 focus:ring-2 focus:ring-[var(--accent)]/20 disabled:opacity-60"
                     />
                   </div>
                   <div>
@@ -142,7 +142,7 @@ export function StickySmsWidget() {
                       onChange={(e) => { setPhone(e.target.value); setError(""); }}
                       placeholder="Mobile number"
                       disabled={submitting}
-                      className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-white placeholder-zinc-600 outline-none transition-all duration-200 focus:border-[#00d4ff] focus:ring-2 focus:ring-[#00d4ff]/25 disabled:opacity-60"
+                      className="w-full rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-2.5 text-white placeholder-slate-600 outline-none transition-all duration-300 focus:border-[var(--accent)]/40 focus:ring-2 focus:ring-[var(--accent)]/20 disabled:opacity-60"
                     />
                   </div>
                   <div>
@@ -155,18 +155,18 @@ export function StickySmsWidget() {
                       rows={3}
                       disabled={submitting}
                       maxLength={2000}
-                      className="w-full resize-none rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-white placeholder-zinc-600 outline-none transition-all duration-200 focus:border-[#00d4ff] focus:ring-2 focus:ring-[#00d4ff]/25 disabled:opacity-60"
+                      className="w-full resize-none rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-2.5 text-white placeholder-slate-600 outline-none transition-all duration-300 focus:border-[var(--accent)]/40 focus:ring-2 focus:ring-[var(--accent)]/20 disabled:opacity-60"
                     />
                   </div>
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#00d4ff] py-3 font-semibold text-black shadow-lg shadow-[#00d4ff]/25 transition-all duration-200 hover:bg-[#33e0ff] hover:shadow-xl hover:shadow-[#00d4ff]/30 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-70"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-white/[0.9] py-3 text-sm font-semibold text-zinc-900 shadow-lg shadow-white/5 transition-all duration-300 hover:bg-white hover:shadow-xl hover:shadow-white/10 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-70"
                   >
                     {submitting ? (
                       <>
                         <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-                        Sending…
+                        Sending&hellip;
                       </>
                     ) : (
                       <>
@@ -187,12 +187,12 @@ export function StickySmsWidget() {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
-            className={`fixed bottom-6 right-6 z-50 flex touch-target items-center gap-3 rounded-full border border-white/10 bg-[#111]/80 px-5 py-3.5 text-left text-sm font-medium text-white shadow-xl shadow-black/30 backdrop-blur-xl transition-all duration-200 hover:border-[#00d4ff]/30 hover:shadow-[#00d4ff]/15 active:scale-[0.97] sm:min-h-0 ${idlePulse ? "idle-pulse" : ""}`}
+            className={`glass-panel fixed bottom-6 right-6 z-50 flex touch-target items-center gap-3 rounded-2xl px-5 py-3.5 text-left text-sm font-medium text-white transition-all duration-300 hover:border-white/[0.12] sm:min-h-0 ${idlePulse ? "idle-pulse" : ""}`}
           >
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#00d4ff]/15 ring-2 ring-[#00d4ff]/20">
-              <MessageCircle className="h-5 w-5 text-[#00d4ff]" aria-hidden />
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--accent)]/[0.08] ring-1 ring-[var(--accent)]/15">
+              <MessageCircle className="h-5 w-5 text-[var(--accent)]" aria-hidden />
             </span>
-            <span>Text us — reply in ~3 min</span>
+            <span className="text-slate-300">Text us &mdash; reply in ~3 min</span>
           </motion.button>
         )}
       </AnimatePresence>

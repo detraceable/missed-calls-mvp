@@ -38,18 +38,18 @@ export function FomoToast() {
           initial={{ opacity: 0, x: -40, y: 20 }}
           animate={{ opacity: 1, x: 0, y: 0 }}
           exit={{ opacity: 0, x: -40, y: 10 }}
-          transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
-          className="fixed bottom-6 left-6 z-50 flex max-w-xs items-center gap-3 rounded-xl border border-white/[0.07] bg-[#111]/90 px-4 py-3 shadow-2xl shadow-black/40 backdrop-blur-lg"
+          transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+          className="glass-panel fixed bottom-6 left-6 z-50 flex max-w-xs items-center gap-3 rounded-2xl px-5 py-3.5"
         >
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#00d4ff]/15">
-            <PhoneIncoming className="h-4 w-4 text-[#00d4ff]" aria-hidden />
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--accent)]/[0.08] ring-1 ring-[var(--accent)]/10">
+            <PhoneIncoming className="h-4 w-4 text-[var(--accent)]" aria-hidden />
           </span>
           <div className="min-w-0">
             <p className="truncate text-sm font-medium text-white">
               {active.text}
             </p>
-            <p className="text-xs text-zinc-500">
-              Just now · {active.location}
+            <p className="text-xs text-slate-500">
+              Just now &middot; {active.location}
             </p>
           </div>
         </motion.div>

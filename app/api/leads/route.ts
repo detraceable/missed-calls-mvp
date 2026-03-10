@@ -5,15 +5,9 @@ import {
   validateWidgetPayload,
   sanitizeString,
 } from "@/lib/leads";
-import { insertLead } from "@/lib/db";
+import { insertLead, checkRateLimit } from "@/lib/db";
 
 const WEBHOOK_URL = process.env.LEADS_WEBHOOK_URL;
-const RATE_LIMIT_WINDOW_MS = 60_000;
-const RATE_LIMIT_MAX = 10;
-
-// In-memory rate limit by IP (resets on cold start). Replace with Redis/Upstash for production.
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-
 function getClientIP(request: Request): string {
   return (
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
@@ -22,30 +16,10 @@ function getClientIP(request: Request): string {
   );
 }
 
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const entry = rateLimitMap.get(ip);
-  if (!entry) return false;
-  if (now > entry.resetAt) {
-    rateLimitMap.delete(ip);
-    return false;
-  }
-  return entry.count >= RATE_LIMIT_MAX;
-}
-
-function recordRequest(ip: string): void {
-  const now = Date.now();
-  const entry = rateLimitMap.get(ip);
-  if (!entry) {
-    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
-    return;
-  }
-  entry.count += 1;
-}
-
 export async function POST(request: Request) {
   const ip = getClientIP(request);
-  if (isRateLimited(ip)) {
+  const isLimited = await checkRateLimit(ip, 10, 60_000);
+  if (isLimited) {
     return NextResponse.json(
       { success: false, error: "Too many requests. Try again in a minute." },
       { status: 429 }
@@ -72,7 +46,6 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-    recordRequest(ip);
     const data = result.data;
     try {
       await insertLead(data);
@@ -95,7 +68,6 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-    recordRequest(ip);
     const data = result.data;
     try {
       await insertLead(data);

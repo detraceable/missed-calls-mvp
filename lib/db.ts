@@ -72,3 +72,35 @@ export async function insertLead(payload: LeadPayload): Promise<void> {
 }
 
 export function getDb() { return getSql(); }
+
+export async function checkRateLimit(ip: string, limit: number, windowMs: number): Promise<boolean> {
+  const db = getSql();
+  if (!db) return false;
+  
+  const resetAt = new Date(Date.now() + windowMs);
+
+  try {
+    const res = await db`
+      INSERT INTO rate_limits (ip_address, request_count, reset_at)
+      VALUES (${ip}, 1, ${resetAt})
+      ON CONFLICT (ip_address) DO UPDATE SET
+        request_count = CASE
+          WHEN rate_limits.reset_at < now() THEN 1
+          ELSE rate_limits.request_count + 1
+        END,
+        reset_at = CASE
+          WHEN rate_limits.reset_at < now() THEN ${resetAt}
+          ELSE rate_limits.reset_at
+        END
+      RETURNING request_count
+    `;
+    
+    if (res.length > 0 && res[0].request_count > limit) {
+      return true;
+    }
+    return false;
+  } catch (err) {
+    console.error("[RateLimit] DB error:", err);
+    return false; // Fail open
+  }
+}

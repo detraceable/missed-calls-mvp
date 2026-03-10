@@ -19,8 +19,16 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Stop Losing Revenue to Missed Calls | Instant Quote 24/7",
-  description: "Turn missed calls into instant quotes. We text you back within 3 minutes with a ballpark and next steps. Licensed, insured, 5-star rated.",
+  title: {
+    default: "OmniComm — Never Lose a Missed Call Again",
+    template: "%s | OmniComm",
+  },
+  description: "AI-powered missed-call text-back and lead recovery for local businesses. Instant SMS, AI conversations, real-time dashboard. Start in 10 minutes.",
+  openGraph: {
+    title: "OmniComm — Never Lose a Missed Call Again",
+    description: "AI-powered missed-call text-back and lead recovery for local businesses.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
