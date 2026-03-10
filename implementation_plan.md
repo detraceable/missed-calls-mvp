@@ -41,6 +41,9 @@
 - **`app/api/twilio/sms/route.ts`:** Searches for open `communication`, leverages OpenRouter `getAIReply`, updates `message_history`.
 - **`app/api/stripe/webhook/route.ts`:** Uses `request.text()` for `stripeClient.webhooks.constructEvent`. Handles `checkout.session.completed`, `customer.subscription.updated`, and `customer.subscription.deleted`.
 - **`lib/dead-leads.ts`:** Exports `fireDeadLeadCampaign` to bulk insert leads using SQL transaction and triggers Twilio SMS concurrently.
+- **`app/api/demo/chat/route.ts`:** [NEW] API endpoint for the live demo that accepts a JSON message history and returns an OpenRouter LLM reply.
+- **`components/demo/PhoneSimulator.tsx`:** [NEW] Interactive React Server/Client component rendering an iPhone mockup with live typing indicators and animated chat bubbles.
+- **`app/demo/page.tsx`:** [MODIFY] Replace boilerplate with a dedicated interactive landing page showcasing the `PhoneSimulator`.
 
 ## 4. Environment Variables
 To be appended to `.env.example`:
