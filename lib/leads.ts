@@ -27,6 +27,14 @@ export function formatPhoneForDisplay(digits: string): string {
   return digits;
 }
 
+/** Format as-you-type for US phone input: (XXX) XXX-XXXX, max 10 digits. */
+export function formatPhoneInput(raw: string): string {
+  const digits = raw.replace(/\D/g, "").slice(0, 10);
+  if (digits.length <= 3) return digits ? `(${digits}` : "";
+  if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+}
+
 export function validatePhone(value: string): { ok: boolean; error?: string } {
   const digits = value.replace(/\D/g, "");
   if (digits.length < PHONE_MIN_DIGITS) {

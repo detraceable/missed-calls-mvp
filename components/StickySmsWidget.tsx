@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X, Send, Loader2 } from "lucide-react";
 
@@ -18,6 +18,12 @@ export function StickySmsWidget() {
   const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [idlePulse, setIdlePulse] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setIdlePulse(true), 5000);
+    return () => clearTimeout(t);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,13 +75,13 @@ export function StickySmsWidget() {
             transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
             className="fixed bottom-6 right-6 z-50 w-full max-w-sm overflow-hidden rounded-2xl border border-white/10 shadow-2xl shadow-black/30 glass-panel"
           >
-            <div className="h-1 w-full bg-gradient-to-r from-sky-500 to-sky-400" aria-hidden />
+            <div className="h-1 w-full bg-gradient-to-r from-emerald-500 to-emerald-400" aria-hidden />
             <div className="flex items-center justify-between border-b border-white/10 bg-white/5 px-4 py-3">
               <span className="flex items-center gap-2 font-semibold text-white">
-                <span className="rounded-lg bg-sky-500/20 p-1.5">
-                  <MessageCircle className="h-4 w-4 text-sky-400" aria-hidden />
+                <span className="rounded-lg bg-emerald-500/20 p-1.5">
+                  <MessageCircle className="h-4 w-4 text-emerald-400" aria-hidden />
                 </span>
-                Text us directly
+                Text us
               </span>
               <button
                 type="button"
@@ -106,7 +112,7 @@ export function StickySmsWidget() {
                 >
                   <p className="font-semibold text-white">Message sent.</p>
                   <p className="mt-1.5 text-sm text-slate-400">
-                    We’ll reply within ~3 minutes.
+                    We’ll reply at this number within ~3 minutes.
                   </p>
                 </motion.div>
               ) : (
@@ -131,7 +137,7 @@ export function StickySmsWidget() {
                       placeholder="Your name"
                       disabled={submitting}
                       maxLength={200}
-                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-500 outline-none transition-all duration-200 focus:border-sky-400 focus:ring-2 focus:ring-sky-400/25 disabled:opacity-60"
+                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-500 outline-none transition-all duration-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/25 disabled:opacity-60"
                     />
                   </div>
                   <div>
@@ -148,7 +154,7 @@ export function StickySmsWidget() {
                       }}
                       placeholder="Mobile number"
                       disabled={submitting}
-                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-500 outline-none transition-all duration-200 focus:border-sky-400 focus:ring-2 focus:ring-sky-400/25 disabled:opacity-60"
+                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-500 outline-none transition-all duration-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/25 disabled:opacity-60"
                     />
                   </div>
                   <div>
@@ -159,17 +165,17 @@ export function StickySmsWidget() {
                       id="widget-message"
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
-                      placeholder="What do you need?"
+                      placeholder="What do you need? (e.g. leak, installation, quote)"
                       rows={3}
                       disabled={submitting}
                       maxLength={2000}
-                      className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-500 outline-none transition-all duration-200 focus:border-sky-400 focus:ring-2 focus:ring-sky-400/25 disabled:opacity-60"
+                      className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-500 outline-none transition-all duration-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/25 disabled:opacity-60"
                     />
                   </div>
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-sky-500 py-3 font-semibold text-white shadow-lg shadow-sky-500/25 transition-all duration-200 hover:bg-sky-400 hover:shadow-xl hover:shadow-sky-400/30 active:scale-[0.99] disabled:pointer-events-none disabled:opacity-70"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 py-3 font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all duration-200 hover:bg-emerald-400 hover:shadow-xl hover:shadow-emerald-400/30 active:scale-[0.99] disabled:pointer-events-none disabled:opacity-70"
                   >
                     {submitting ? (
                       <>
@@ -191,16 +197,19 @@ export function StickySmsWidget() {
           <motion.button
             key="trigger"
             type="button"
-            onClick={() => setOpen(true)}
+            onClick={() => {
+              setIdlePulse(false);
+              setOpen(true);
+            }}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
-            className="fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-full border border-white/10 px-5 py-3.5 text-left text-sm font-medium text-white shadow-xl shadow-black/20 backdrop-blur-xl transition-all duration-200 hover:border-sky-500/30 hover:shadow-sky-500/15 glass-panel active:scale-[0.98]"
+            className={`fixed bottom-6 right-6 z-50 flex touch-target items-center gap-3 rounded-full border border-white/10 px-5 py-3.5 text-left text-sm font-medium text-white shadow-xl shadow-black/20 backdrop-blur-xl transition-all duration-200 hover:border-emerald-500/30 hover:shadow-emerald-500/15 glass-panel active:scale-[0.98] sm:min-h-0 ${idlePulse ? "idle-pulse" : ""}`}
           >
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sky-500/20 ring-2 ring-sky-500/20">
-              <MessageCircle className="h-5 w-5 text-sky-400" aria-hidden />
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 ring-2 ring-emerald-500/20">
+              <MessageCircle className="h-5 w-5 text-emerald-400" aria-hidden />
             </span>
-            <span>Text us directly — avg response: 3 mins</span>
+            <span>Text us — we reply in ~3 min</span>
           </motion.button>
         )}
       </AnimatePresence>

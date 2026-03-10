@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Syne } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { StickySmsWidget } from "@/components/StickySmsWidget";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -20,8 +24,8 @@ const syne = Syne({
 });
 
 export const metadata: Metadata = {
-  title: "24/7 Instant Estimate | Never Miss a Lead",
-  description: "Get an instant estimate anytime. Licensed, insured, and 5-star rated. We text you back in minutes.",
+  title: "Free Estimate in 30 Seconds | 24/7 Response",
+  description: "Get a free estimate anytime. No forms, no hold music—we text you back in minutes. Licensed, insured, 5-star rated. Available 24/7.",
 };
 
 export default function RootLayout({
@@ -34,7 +38,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${syne.variable} font-sans antialiased`}
       >
+        <Header />
         {children}
+        <Footer />
+        <StickySmsWidget />
+        <Analytics />
       </body>
     </html>
   );
