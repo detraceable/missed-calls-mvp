@@ -14,26 +14,21 @@ import {
 import { formatPhoneInput } from "@/lib/leads";
 
 type Step = "choice" | "drill" | "capture" | "success";
-
 type ServiceChoice = "emergency" | "maintenance" | "quote" | "question" | null;
-
 type DrillOption = "asap" | "today" | "this_week" | "small" | "medium" | "large" | null;
 
 const slide = {
-  enter: (dir: number) => ({ x: dir * 80, opacity: 0, filter: "blur(4px)" }),
+  enter: (dir: number) => ({ x: dir * 60, opacity: 0, filter: "blur(4px)" }),
   center: { x: 0, opacity: 1, filter: "blur(0px)" },
-  exit: (dir: number) => ({ x: dir * -80, opacity: 0, filter: "blur(4px)" }),
+  exit: (dir: number) => ({ x: dir * -60, opacity: 0, filter: "blur(4px)" }),
 };
 
-const container = {
+const stagger = {
   hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.05, delayChildren: 0.05 },
-  },
+  show: { opacity: 1, transition: { staggerChildren: 0.05, delayChildren: 0.05 } },
 };
 
-const item = {
+const fadeUp = {
   hidden: { opacity: 0, y: 8 },
   show: { opacity: 1, y: 0 },
 };
@@ -41,16 +36,17 @@ const item = {
 function getStepIndex(step: Step): number {
   if (step === "choice") return 1;
   if (step === "drill") return 2;
-  if (step === "capture" || step === "success") return 3;
   return 3;
 }
 
-function getStepLabel(step: Step): string {
-  if (step === "success") return "Done";
-  return `Step ${getStepIndex(step)} of 3`;
-}
+const COUNTDOWN_SECONDS = 3 * 60;
 
-const COUNTDOWN_SECONDS = 3 * 60; // 3 minutes
+const CHOICES = [
+  { id: "emergency" as const, label: "Emergency Repair", icon: AlertCircle },
+  { id: "maintenance" as const, label: "Maintenance", icon: Wrench },
+  { id: "quote" as const, label: "Get a Quote", icon: ClipboardList },
+  { id: "question" as const, label: "Quick Question", icon: MessageCircle },
+];
 
 export function DynamicFunnel() {
   const [step, setStep] = useState<Step>("choice");
@@ -77,11 +73,7 @@ export function DynamicFunnel() {
 
   const handleService = (value: ServiceChoice) => {
     setService(value);
-    if (value === "question") {
-      goTo("capture");
-    } else {
-      goTo("drill");
-    }
+    goTo(value === "question" ? "capture" : "drill");
   };
 
   const handleDrill = (value: DrillOption) => {
@@ -94,20 +86,13 @@ export function DynamicFunnel() {
     setPhoneError("");
   };
 
-  const getPhoneDigits = () => phone.replace(/\D/g, "");
-
-  const validatePhone = (value: string) => {
-    const digits = value.replace(/\D/g, "");
-    if (digits.length < 10) return "Enter a valid 10-digit number.";
-    return "";
-  };
+  const phoneDigits = phone.replace(/\D/g, "");
+  const phoneValid = phoneDigits.length === 10;
 
   const handleCaptureSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const digits = getPhoneDigits();
-    const err = validatePhone(phone);
-    if (err) {
-      setPhoneError(err);
+    if (phoneDigits.length < 10) {
+      setPhoneError("Enter a valid 10-digit number.");
       return;
     }
     setPhoneError("");
@@ -119,7 +104,7 @@ export function DynamicFunnel() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           source: "funnel",
-          phone: digits,
+          phone: phoneDigits,
           service: service ?? "question",
           drill: drill ?? null,
         }),
@@ -152,17 +137,8 @@ export function DynamicFunnel() {
 
   const isSizeDrill = service === "maintenance" || service === "quote";
   const stepIndex = getStepIndex(step);
-  const phoneDigits = getPhoneDigits();
-  const phoneValid = phoneDigits.length === 10;
 
-  const choiceOptions = [
-    { id: "emergency" as const, label: "Emergency Repair", icon: AlertCircle },
-    { id: "maintenance" as const, label: "Maintenance", icon: Wrench },
-    { id: "quote" as const, label: "Quote", icon: ClipboardList },
-    { id: "question" as const, label: "Quick Question", icon: MessageCircle },
-  ];
-
-  const formatCountdown = (sec: number) => {
+  const fmtCountdown = (sec: number) => {
     const m = Math.floor(sec / 60);
     const s = sec % 60;
     return `${m}:${s.toString().padStart(2, "0")}`;
@@ -170,16 +146,18 @@ export function DynamicFunnel() {
 
   return (
     <div className="relative min-h-[340px]">
-      {/* Progress indicator */}
+      {/* Progress */}
       {step !== "success" && (
         <div className="mb-5">
           <div className="flex items-center justify-between text-xs">
-            <span className="font-medium text-slate-400">{getStepLabel(step)}</span>
-            <span className="text-emerald-400">{stepIndex}/3</span>
+            <span className="font-medium text-zinc-500">
+              {step === "choice" ? "Step 1 of 3" : step === "drill" ? "Step 2 of 3" : "Step 3 of 3"}
+            </span>
+            <span className="font-mono text-[#00d4ff]">{stepIndex}/3</span>
           </div>
-          <div className="progress-track mt-1.5 h-1.5 w-full">
+          <div className="progress-track mt-1.5 h-1 w-full">
             <motion.div
-              className="h-full rounded-full bg-emerald-500"
+              className="h-full rounded-full bg-gradient-to-r from-[#00d4ff] to-[#0088ff]"
               initial={false}
               animate={{ width: `${(stepIndex / 3) * 100}%` }}
               transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
@@ -189,6 +167,7 @@ export function DynamicFunnel() {
       )}
 
       <AnimatePresence mode="wait" initial={false} custom={direction}>
+        {/* ─── Step 1: Choose service ─── */}
         {step === "choice" && (
           <motion.div
             key="choice"
@@ -198,28 +177,25 @@ export function DynamicFunnel() {
             animate="center"
             exit="exit"
             transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-            className="space-y-6"
+            className="space-y-5"
           >
-            <h2 className="text-xl font-semibold tracking-tight text-white">
-              What do you need help with?
-            </h2>
-            <p className="text-sm text-slate-400">Takes about 30 seconds.</p>
-            <motion.div
-              variants={container}
-              initial="hidden"
-              animate="show"
-              className="grid grid-cols-2 gap-3"
-            >
-              {choiceOptions.map(({ id, label, icon: Icon }) => (
+            <div>
+              <h2 className="text-lg font-bold tracking-tight text-white [font-family:var(--font-outfit)]">
+                What do you need help with?
+              </h2>
+              <p className="mt-1 text-sm text-zinc-500">Takes about 30 seconds.</p>
+            </div>
+            <motion.div variants={stagger} initial="hidden" animate="show" className="grid grid-cols-2 gap-3">
+              {CHOICES.map(({ id, label, icon: Icon }) => (
                 <motion.button
                   key={id}
-                  variants={item}
+                  variants={fadeUp}
                   type="button"
                   onClick={() => handleService(id)}
-                  className="card-hover touch-target group flex flex-col items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 p-4 text-white active:scale-[0.98] sm:min-h-0"
+                  className="card-hover touch-target group flex flex-col items-center gap-2.5 rounded-xl border border-white/10 bg-white/[0.03] p-4 text-white active:scale-[0.97] sm:min-h-0"
                 >
-                  <span className="rounded-lg bg-emerald-500/10 p-2 transition-colors group-hover:bg-emerald-500/20">
-                    <Icon className="h-6 w-6 text-emerald-400" aria-hidden />
+                  <span className="rounded-lg bg-[#00d4ff]/10 p-2.5 transition-colors group-hover:bg-[#00d4ff]/20">
+                    <Icon className="h-5 w-5 text-[#00d4ff]" aria-hidden />
                   </span>
                   <span className="text-center text-sm font-medium">{label}</span>
                 </motion.button>
@@ -228,6 +204,7 @@ export function DynamicFunnel() {
           </motion.div>
         )}
 
+        {/* ─── Step 2: Drill-down ─── */}
         {step === "drill" && (
           <motion.div
             key="drill"
@@ -237,53 +214,50 @@ export function DynamicFunnel() {
             animate="center"
             exit="exit"
             transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-            className="space-y-6"
+            className="space-y-5"
           >
             <button
               type="button"
               onClick={back}
-              className="inline-flex items-center gap-1.5 text-sm text-slate-400 transition hover:text-white"
+              className="inline-flex items-center gap-1.5 text-sm text-zinc-500 transition hover:text-white"
             >
               <ArrowLeft className="h-4 w-4" aria-hidden />
               Back
             </button>
-            <h2 className="text-xl font-semibold tracking-tight text-white">
-              {isSizeDrill
-                ? "What size is the project?"
-                : "When do you need us?"}
+            <h2 className="text-lg font-bold tracking-tight text-white [font-family:var(--font-outfit)]">
+              {isSizeDrill ? "How big is the project?" : "When do you need us?"}
             </h2>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               {isSizeDrill
-                ? (["small", "medium", "large"] as const).map((size) => (
+                ? (["small", "medium", "large"] as const).map((s) => (
                     <button
-                      key={size}
+                      key={s}
                       type="button"
-                      onClick={() => handleDrill(size)}
-                      className="card-hover touch-target rounded-xl border border-white/10 bg-white/5 py-3.5 text-sm font-medium capitalize text-white active:scale-[0.98] sm:min-h-0"
+                      onClick={() => handleDrill(s)}
+                      className="card-hover touch-target rounded-xl border border-white/10 bg-white/[0.03] py-3.5 text-sm font-medium capitalize text-white active:scale-[0.97] sm:min-h-0"
                     >
-                      {size}
+                      {s}
                     </button>
                   ))
-                : (
-                  [
+                : ([
                     { id: "asap" as const, label: "ASAP" },
                     { id: "today" as const, label: "Today" },
                     { id: "this_week" as const, label: "This week" },
-                  ]
-                ).map(({ id, label }) => (
-                  <button
-                    key={id}
-                    type="button"
-                    onClick={() => handleDrill(id)}
-                    className="card-hover touch-target rounded-xl border border-white/10 bg-white/5 py-3.5 text-sm font-medium text-white active:scale-[0.98] sm:min-h-0"
-                  >
-                    {label}
-                  </button>
-                ))}
+                  ]).map(({ id, label }) => (
+                    <button
+                      key={id}
+                      type="button"
+                      onClick={() => handleDrill(id)}
+                      className="card-hover touch-target rounded-xl border border-white/10 bg-white/[0.03] py-3.5 text-sm font-medium text-white active:scale-[0.97] sm:min-h-0"
+                    >
+                      {label}
+                    </button>
+                  ))}
             </div>
           </motion.div>
         )}
 
+        {/* ─── Step 3: Capture phone ─── */}
         {step === "capture" && (
           <motion.div
             key="capture"
@@ -293,61 +267,62 @@ export function DynamicFunnel() {
             animate="center"
             exit="exit"
             transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-            className="space-y-6"
+            className="space-y-5"
           >
             <button
               type="button"
               onClick={back}
-              className="inline-flex items-center gap-1.5 text-sm text-slate-400 transition hover:text-white"
+              className="inline-flex items-center gap-1.5 text-sm text-zinc-500 transition hover:text-white"
             >
               <ArrowLeft className="h-4 w-4" aria-hidden />
               Back
             </button>
-            <h2 className="text-xl font-semibold tracking-tight text-white">
-              Almost there.
-            </h2>
-            <p className="text-slate-400">
-              Enter your mobile number and we’ll text you within 3 minutes with a ballpark and how to book.
-            </p>
+            <div>
+              <h2 className="text-lg font-bold tracking-tight text-white [font-family:var(--font-outfit)]">
+                Almost there.
+              </h2>
+              <p className="mt-1 text-zinc-400">
+                Drop your number and we'll text you within 3 minutes.
+              </p>
+            </div>
             <form onSubmit={handleCaptureSubmit} className="space-y-4">
-              <div aria-live="polite" aria-atomic="true" className="min-h-[1.5rem]">
-                {submitError && (
-                  <p className="text-sm text-red-400">{submitError}</p>
-                )}
+              <div aria-live="polite" aria-atomic="true" className="min-h-[1.25rem]">
+                {submitError && <p className="text-sm text-red-400">{submitError}</p>}
               </div>
               <div>
-                <label htmlFor="funnel-phone" className="sr-only">
-                  Mobile number
-                </label>
-                <input
-                  id="funnel-phone"
-                  type="tel"
-                  inputMode="numeric"
-                  value={phone}
-                  onChange={(e) => handlePhoneChange(e.target.value)}
-                  placeholder="(555) 123-4567"
-                  disabled={submitting}
-                  className={`w-full rounded-xl border bg-white/5 px-4 py-3.5 text-white placeholder-slate-500 outline-none transition-all duration-200 focus:ring-2 disabled:opacity-60 ${
-                    phoneError
-                      ? "input-error border-red-400/80 focus:border-red-400 focus:ring-red-400/25"
-                      : phoneValid
-                        ? "input-success border-emerald-500/50 focus:border-emerald-400 focus:ring-emerald-400/25"
-                        : "border-white/10 focus:border-emerald-400 focus:ring-emerald-400/25"
-                  }`}
-                  aria-invalid={!!phoneError}
-                  aria-describedby={phoneError ? "phone-error" : undefined}
-                />
-                <p className="mt-1.5 text-xs text-slate-500">We’ll only text about your request. No spam.</p>
+                <label htmlFor="funnel-phone" className="sr-only">Mobile number</label>
+                <div className="relative">
+                  <input
+                    id="funnel-phone"
+                    type="tel"
+                    inputMode="numeric"
+                    value={phone}
+                    onChange={(e) => handlePhoneChange(e.target.value)}
+                    placeholder="(555) 123-4567"
+                    disabled={submitting}
+                    className={`w-full rounded-xl border bg-white/[0.03] px-4 py-4 font-mono text-lg tracking-wider text-white placeholder-zinc-600 outline-none transition-all duration-200 focus:ring-2 disabled:opacity-60 ${
+                      phoneError
+                        ? "input-error border-red-500/60 focus:border-red-400 focus:ring-red-400/25"
+                        : phoneValid
+                          ? "input-success border-green-500/40 focus:border-green-400 focus:ring-green-400/25"
+                          : "border-white/10 focus:border-[#00d4ff] focus:ring-[#00d4ff]/25"
+                    }`}
+                    aria-invalid={!!phoneError}
+                    aria-describedby={phoneError ? "phone-error" : undefined}
+                  />
+                  {phoneValid && !phoneError && (
+                    <CheckCircle2 className="absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-green-400" aria-hidden />
+                  )}
+                </div>
+                <p className="mt-1.5 text-xs text-zinc-600">We'll only text about your request.</p>
                 {phoneError && (
-                  <p id="phone-error" className="mt-1.5 text-sm text-red-400">
-                    {phoneError}
-                  </p>
+                  <p id="phone-error" className="mt-1 text-sm text-red-400">{phoneError}</p>
                 )}
               </div>
               <button
                 type="submit"
                 disabled={submitting}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 py-3.5 font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all duration-200 hover:bg-emerald-400 hover:shadow-xl hover:shadow-emerald-400/30 active:scale-[0.99] disabled:pointer-events-none disabled:opacity-70"
+                className="pulse-glow flex w-full items-center justify-center gap-2 rounded-xl bg-[#00d4ff] py-4 text-base font-bold text-black shadow-xl shadow-[#00d4ff]/30 transition-all duration-200 hover:bg-[#33e0ff] hover:shadow-2xl hover:shadow-[#00d4ff]/40 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-70"
               >
                 {submitting ? (
                   <>
@@ -355,13 +330,14 @@ export function DynamicFunnel() {
                     Sending…
                   </>
                 ) : (
-                  "Get my free estimate"
+                  "Send for instant text"
                 )}
               </button>
             </form>
           </motion.div>
         )}
 
+        {/* ─── Success ─── */}
         {step === "success" && (
           <motion.div
             key="success"
@@ -377,25 +353,25 @@ export function DynamicFunnel() {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ type: "spring", stiffness: 200, damping: 15 }}
-              className="rounded-full bg-emerald-500/20 p-5 ring-4 ring-emerald-500/20"
+              className="rounded-full bg-[#00d4ff]/15 p-5 ring-4 ring-[#00d4ff]/15"
             >
-              <CheckCircle2 className="h-14 w-14 text-emerald-400" aria-hidden />
+              <CheckCircle2 className="h-14 w-14 text-[#00d4ff]" aria-hidden />
             </motion.div>
-            <h2 className="text-2xl font-semibold tracking-tight text-white">
-              Message sent!
+            <h2 className="text-2xl font-bold tracking-tight text-white [font-family:var(--font-outfit)]">
+              Missed call saved!
             </h2>
-            <p className="max-w-xs text-slate-400 leading-relaxed">
-              We’ll text you at this number with a ballpark and next steps.
+            <p className="max-w-xs text-zinc-400 leading-relaxed">
+              We'll text you at this number with a ballpark and next steps.
             </p>
             {countdown != null && countdown >= 0 && (
-              <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
-                <p className="text-xs font-medium uppercase tracking-wider text-slate-500">
-                  Next reply in
+              <div className="glass rounded-xl px-5 py-3">
+                <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                  Reply in
                 </p>
-                <p className="mt-0.5 font-mono text-2xl font-semibold tabular-nums text-emerald-400">
-                  {formatCountdown(countdown)}
+                <p className="mt-0.5 font-mono text-3xl font-bold tabular-nums text-[#00d4ff]">
+                  {fmtCountdown(countdown)}
                 </p>
-                <p className="mt-1 text-xs text-slate-500">Keep your phone handy.</p>
+                <p className="mt-1 text-xs text-zinc-500">Keep your phone handy.</p>
               </div>
             )}
           </motion.div>

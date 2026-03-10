@@ -73,13 +73,13 @@ export function StickySmsWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.96 }}
             transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
-            className="fixed bottom-6 right-6 z-50 w-full max-w-sm overflow-hidden rounded-2xl border border-white/10 shadow-2xl shadow-black/30 glass-panel"
+            className="fixed bottom-6 right-6 z-50 w-full max-w-sm overflow-hidden rounded-2xl shadow-2xl shadow-black/40 glass-strong"
           >
-            <div className="h-1 w-full bg-gradient-to-r from-emerald-500 to-emerald-400" aria-hidden />
-            <div className="flex items-center justify-between border-b border-white/10 bg-white/5 px-4 py-3">
+            <div className="h-1 w-full bg-gradient-to-r from-[#00d4ff] to-[#0088ff]" aria-hidden />
+            <div className="flex items-center justify-between border-b border-white/10 bg-white/[0.03] px-4 py-3">
               <span className="flex items-center gap-2 font-semibold text-white">
-                <span className="rounded-lg bg-emerald-500/20 p-1.5">
-                  <MessageCircle className="h-4 w-4 text-emerald-400" aria-hidden />
+                <span className="rounded-lg bg-[#00d4ff]/15 p-1.5">
+                  <MessageCircle className="h-4 w-4 text-[#00d4ff]" aria-hidden />
                 </span>
                 Text us
               </span>
@@ -95,7 +95,7 @@ export function StickySmsWidget() {
                     setError("");
                   }
                 }}
-                className="rounded-lg p-1.5 text-slate-400 transition hover:bg-white/10 hover:text-white"
+                className="rounded-lg p-1.5 text-zinc-500 transition hover:bg-white/10 hover:text-white"
                 aria-label="Close"
               >
                 <X className="h-5 w-5" aria-hidden />
@@ -111,56 +111,42 @@ export function StickySmsWidget() {
                   aria-live="polite"
                 >
                   <p className="font-semibold text-white">Message sent.</p>
-                  <p className="mt-1.5 text-sm text-slate-400">
-                    We’ll reply at this number within ~3 minutes.
+                  <p className="mt-1.5 text-sm text-zinc-400">
+                    We'll reply at this number within ~3 minutes.
                   </p>
                 </motion.div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-3">
                   <div aria-live="polite" aria-atomic="true" className="min-h-[1.25rem]">
-                    {error && (
-                      <p className="text-sm text-red-400">{error}</p>
-                    )}
+                    {error && <p className="text-sm text-red-400">{error}</p>}
                   </div>
                   <div>
-                    <label htmlFor="widget-name" className="sr-only">
-                      Name
-                    </label>
+                    <label htmlFor="widget-name" className="sr-only">Name</label>
                     <input
                       id="widget-name"
                       type="text"
                       value={name}
-                      onChange={(e) => {
-                        setName(e.target.value);
-                        setError("");
-                      }}
+                      onChange={(e) => { setName(e.target.value); setError(""); }}
                       placeholder="Your name"
                       disabled={submitting}
                       maxLength={200}
-                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-500 outline-none transition-all duration-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/25 disabled:opacity-60"
+                      className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-white placeholder-zinc-600 outline-none transition-all duration-200 focus:border-[#00d4ff] focus:ring-2 focus:ring-[#00d4ff]/25 disabled:opacity-60"
                     />
                   </div>
                   <div>
-                    <label htmlFor="widget-phone" className="sr-only">
-                      Phone
-                    </label>
+                    <label htmlFor="widget-phone" className="sr-only">Phone</label>
                     <input
                       id="widget-phone"
                       type="tel"
                       value={phone}
-                      onChange={(e) => {
-                        setPhone(e.target.value);
-                        setError("");
-                      }}
+                      onChange={(e) => { setPhone(e.target.value); setError(""); }}
                       placeholder="Mobile number"
                       disabled={submitting}
-                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-500 outline-none transition-all duration-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/25 disabled:opacity-60"
+                      className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-white placeholder-zinc-600 outline-none transition-all duration-200 focus:border-[#00d4ff] focus:ring-2 focus:ring-[#00d4ff]/25 disabled:opacity-60"
                     />
                   </div>
                   <div>
-                    <label htmlFor="widget-message" className="sr-only">
-                      Message
-                    </label>
+                    <label htmlFor="widget-message" className="sr-only">Message</label>
                     <textarea
                       id="widget-message"
                       value={message}
@@ -169,13 +155,13 @@ export function StickySmsWidget() {
                       rows={3}
                       disabled={submitting}
                       maxLength={2000}
-                      className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-500 outline-none transition-all duration-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/25 disabled:opacity-60"
+                      className="w-full resize-none rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-white placeholder-zinc-600 outline-none transition-all duration-200 focus:border-[#00d4ff] focus:ring-2 focus:ring-[#00d4ff]/25 disabled:opacity-60"
                     />
                   </div>
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 py-3 font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all duration-200 hover:bg-emerald-400 hover:shadow-xl hover:shadow-emerald-400/30 active:scale-[0.99] disabled:pointer-events-none disabled:opacity-70"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#00d4ff] py-3 font-semibold text-black shadow-lg shadow-[#00d4ff]/25 transition-all duration-200 hover:bg-[#33e0ff] hover:shadow-xl hover:shadow-[#00d4ff]/30 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-70"
                   >
                     {submitting ? (
                       <>
@@ -197,19 +183,16 @@ export function StickySmsWidget() {
           <motion.button
             key="trigger"
             type="button"
-            onClick={() => {
-              setIdlePulse(false);
-              setOpen(true);
-            }}
+            onClick={() => { setIdlePulse(false); setOpen(true); }}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
-            className={`fixed bottom-6 right-6 z-50 flex touch-target items-center gap-3 rounded-full border border-white/10 px-5 py-3.5 text-left text-sm font-medium text-white shadow-xl shadow-black/20 backdrop-blur-xl transition-all duration-200 hover:border-emerald-500/30 hover:shadow-emerald-500/15 glass-panel active:scale-[0.98] sm:min-h-0 ${idlePulse ? "idle-pulse" : ""}`}
+            className={`fixed bottom-6 right-6 z-50 flex touch-target items-center gap-3 rounded-full border border-white/10 bg-[#111]/80 px-5 py-3.5 text-left text-sm font-medium text-white shadow-xl shadow-black/30 backdrop-blur-xl transition-all duration-200 hover:border-[#00d4ff]/30 hover:shadow-[#00d4ff]/15 active:scale-[0.97] sm:min-h-0 ${idlePulse ? "idle-pulse" : ""}`}
           >
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 ring-2 ring-emerald-500/20">
-              <MessageCircle className="h-5 w-5 text-emerald-400" aria-hidden />
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#00d4ff]/15 ring-2 ring-[#00d4ff]/20">
+              <MessageCircle className="h-5 w-5 text-[#00d4ff]" aria-hidden />
             </span>
-            <span>Text us — we reply in ~3 min</span>
+            <span>Text us — reply in ~3 min</span>
           </motion.button>
         )}
       </AnimatePresence>

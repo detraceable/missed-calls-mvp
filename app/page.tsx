@@ -1,11 +1,13 @@
 import { LeadHero } from "@/components/LeadHero";
-import { HowItWorks } from "@/components/HowItWorks";
+import { BentoGrid } from "@/components/BentoGrid";
+import { FomoToast } from "@/components/FomoToast";
 
 export default function Home() {
   return (
-    <div className="min-h-screen overflow-x-hidden bg-slate-950 bg-mesh">
+    <div className="min-h-screen overflow-x-hidden bg-[#050505]">
       <LeadHero />
-      <HowItWorks />
+      <BentoGrid />
+      <FomoToast />
     </div>
   );
 }
