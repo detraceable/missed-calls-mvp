@@ -18,7 +18,7 @@ export function LeadHero() {
             </span>
           </h1>
           <p className="hero-animate hero-animate-delay-2 mt-6 max-w-lg text-lg leading-relaxed text-slate-400 sm:text-xl">
-            Turn missed calls into instant quotes. Tell us what you need below&mdash;our team will text you within 3 minutes with a ballpark and next steps.
+            Turn missed calls into instant quotes. Tell us what you need below&mdash;our team will text you with a ballpark and next steps.
           </p>
 
           {/* Speed guarantee */}

@@ -23,7 +23,7 @@ const STEPS = [
     icon: BotMessageSquare,
     tag: "Step 3",
     title: "We text back instantly.",
-    text: "Our system fires back a text within 3 minutes with a ballpark estimate and next steps. The job is saved.",
+    text: "Our system fires back a text instantly with a ballpark estimate and next steps. The job is saved.",
     span: "sm:col-span-1 sm:row-span-1",
   },
 ];

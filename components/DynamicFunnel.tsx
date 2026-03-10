@@ -282,7 +282,7 @@ export function DynamicFunnel() {
                 Almost there.
               </h2>
               <p className="mt-1 text-slate-400">
-                Drop your number and we&apos;ll text you within 3 minutes.
+                Drop your number and we&apos;ll text you immediately.
               </p>
             </div>
             <form onSubmit={handleCaptureSubmit} className="space-y-4">
@@ -363,17 +363,6 @@ export function DynamicFunnel() {
             <p className="max-w-xs leading-relaxed text-slate-400">
               We&apos;ll text you at this number with a ballpark and next steps.
             </p>
-            {countdown != null && countdown >= 0 && (
-              <div className="glass-panel rounded-2xl px-6 py-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-slate-500">
-                  Reply in
-                </p>
-                <p className="mt-0.5 font-mono text-3xl font-bold tabular-nums text-[var(--accent)]">
-                  {fmtCountdown(countdown)}
-                </p>
-                <p className="mt-1 text-xs text-slate-500">Keep your phone handy.</p>
-              </div>
-            )}
           </motion.div>
         )}
       </AnimatePresence>

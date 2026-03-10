@@ -112,7 +112,7 @@ export function StickySmsWidget() {
                 >
                   <p className="font-semibold text-white">Message sent.</p>
                   <p className="mt-1.5 text-sm text-slate-400">
-                    We&apos;ll reply at this number within ~3 minutes.
+                    We&apos;ll reply at this number right away.
                   </p>
                 </motion.div>
               ) : (
@@ -192,7 +192,7 @@ export function StickySmsWidget() {
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--accent)]/[0.08] ring-1 ring-[var(--accent)]/15">
               <MessageCircle className="h-5 w-5 text-[var(--accent)]" aria-hidden />
             </span>
-            <span className="text-slate-300">Text us &mdash; reply in ~3 min</span>
+            <span className="text-slate-300">Text us</span>
           </motion.button>
         )}
       </AnimatePresence>
