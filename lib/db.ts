@@ -70,3 +70,5 @@ export async function insertLead(payload: LeadPayload): Promise<void> {
     `;
   }
 }
+
+export function getDb() { return getSql(); }
