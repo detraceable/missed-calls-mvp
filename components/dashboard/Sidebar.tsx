@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { MessageSquare, Settings, CreditCard, Menu, X, Zap } from 'lucide-react';
+import { UserButton } from '@clerk/nextjs';
 
 const navItems = [
   { href: '/dashboard/conversations', label: 'Conversations', icon: MessageSquare },
@@ -86,8 +87,8 @@ export function Sidebar() {
         </nav>
 
         {/* Footer */}
-        <div className="border-t border-white/5 px-5 py-4">
-          <p className="text-xs text-zinc-600">Omni-Comm Engine v0.1</p>
+        <div className="border-t border-white/5 px-5 py-6">
+          <UserButton showName />
         </div>
       </aside>
     </>

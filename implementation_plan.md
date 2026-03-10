@@ -26,10 +26,14 @@
   - `created_at` (timestamptz)
   - `updated_at` (timestamptz with auto-update trigger)
 - **RLS Note:** API routes use service role which bypasses RLS. Policies apply to future anon-key frontend usage.
+- **`supabase/migrations/[timestamp]_auth_migration.sql`:** [NEW] Alters `owner_id` column in `businesses` from `uuid` to `text` to support Clerk's string-based `user_id` format.
 
 ## 2. Modified Files
 - **`lib/db.ts`:** Append `export function getDb() { return getSql(); }`
 - **`.env.example`:** Append new variables (listed in Section 4).
+- **`app/layout.tsx` & `middleware.ts`:** Wrap app in `<ClerkProvider>` and protect `/dashboard` routes.
+- **`app/dashboard/settings/page.tsx` & `app/dashboard/conversations/page.tsx`:** Fetch data securely using Clerk's `auth().userId` instead of hardcoded `LIMIT 1`.
+- **`components/Header.tsx`:** Add conditional rendering for Login / Dashboard buttons using `<SignedIn>` and `<SignedOut>`.
 
 ## 3. New Files
 - **`lib/twilio-client.ts`:** Singleton Twilio client initialized with env vars.
@@ -55,3 +59,5 @@ To be appended to `.env.example`:
 - `OPENROUTER_API_KEY`
 - `OPENROUTER_MODEL` (default: meta-llama/llama-3-8b-instruct)
 - `NEXT_PUBLIC_APP_URL`
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
+- `CLERK_SECRET_KEY`

@@ -4,10 +4,21 @@ import { updateBusinessSettings } from '@/app/actions/settings';
 import { ToggleSwitch } from '@/components/dashboard/ToggleSwitch';
 import { SubmitButton } from '@/components/dashboard/SubmitButton';
 import { Settings, Shield } from 'lucide-react';
+import { auth } from '@clerk/nextjs/server';
 
 export const dynamic = 'force-dynamic';
 
 export default async function SettingsPage() {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <p className="text-sm text-zinc-500">Not authenticated.</p>
+      </div>
+    );
+  }
+
   const db = getDb();
   if (!db) {
     return (
@@ -17,28 +28,18 @@ export default async function SettingsPage() {
     );
   }
 
-  const allBusinesses = await db`SELECT id FROM businesses LIMIT 1`;
-  const userBusinessId = allBusinesses.length > 0 ? allBusinesses[0].id : null;
-
-  if (!userBusinessId) {
-    return (
-      <div className="flex h-screen flex-col items-center justify-center gap-2">
-        <p className="text-sm text-zinc-400">No businesses found.</p>
-        <p className="text-xs text-zinc-600">Create a business to manage settings.</p>
-      </div>
-    );
-  }
-
-  const businesses = await db<BusinessRow[]>`
-    SELECT * FROM businesses WHERE id = ${userBusinessId}
+  // Find their business
+  let businesses = await db<BusinessRow[]>`
+    SELECT * FROM businesses WHERE owner_id = ${userId}
   `;
 
+  // Auto-provision a business for new users just to make the MVP smooth
   if (!businesses.length) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <p className="text-sm text-zinc-500">Business not found.</p>
-      </div>
-    );
+    businesses = await db<BusinessRow[]>`
+      INSERT INTO businesses (owner_id, name, default_system_prompt)
+      VALUES (${userId}, 'My New Business', 'You are a helpful AI receptionist.')
+      RETURNING *
+    `;
   }
 
   const business = businesses[0];
