@@ -1,18 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fdfdfd;
-  --foreground: #09090b;
-  --accent: #2563eb;
-  --accent-hover: #1d4ed8;
-  --accent-glow: rgba(37, 99, 235, 0.15);
-  --accent-secondary: #059669;
-  --muted: #71717a;
-  --card-bg: #ffffff;
-  --card-border: rgba(9, 9, 11, 0.05);
-  --glass-bg: rgba(255, 255, 255, 0.65);
-  --glass-bg-strong: rgba(255, 255, 255, 0.85);
-  --glass-border: rgba(255, 255, 255, 0.4);
+  --background: #030712; /* Deep space black */
+  --foreground: #f8fafc;
+  --accent: #3b82f6;
+  --accent-hover: #60a5fa;
+  --accent-glow: rgba(59, 130, 246, 0.25);
+  --accent-secondary: #10b981;
+  --muted: #94a3b8;
+  --card-bg: rgba(255, 255, 255, 0.03);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --glass-bg: rgba(0, 0, 0, 0.4);
+  --glass-bg-strong: rgba(0, 0, 0, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.1);
 }
 
 @theme inline {
@@ -54,14 +54,14 @@ body {
 .bg-aurora::before {
   top: -20%;
   left: -10%;
-  background: radial-gradient(circle, #3b82f6 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, transparent 70%);
   animation: float-orb 25s infinite ease-in-out alternate;
 }
 
 .bg-aurora::after {
   bottom: -20%;
   right: -10%;
-  background: radial-gradient(circle, #8b5cf6 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, transparent 70%);
   animation: float-orb 30s infinite ease-in-out alternate-reverse;
 }
 
@@ -71,31 +71,31 @@ body {
   100% { transform: translate(-5%, -5%) scale(0.9); }
 }
 
-/* ─── Frosted glass panels (Apple Style) ─── */
+/* ─── Frosted glass panels (Dark Apple Style) ─── */
 .glass {
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(15, 23, 42, 0.4);
   backdrop-filter: blur(24px) saturate(150%);
   -webkit-backdrop-filter: blur(24px) saturate(150%);
-  border: 1px solid rgba(255, 255, 255, 1);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
 }
 
 .glass-strong {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(15, 23, 42, 0.6);
   backdrop-filter: blur(30px) saturate(180%);
   -webkit-backdrop-filter: blur(30px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
 .glass-panel {
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(15, 23, 42, 0.75);
   backdrop-filter: blur(40px) saturate(200%);
   -webkit-backdrop-filter: blur(40px) saturate(200%);
-  border: 1px solid rgba(255, 255, 255, 1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow:
-    0 4px 6px -1px rgba(0, 0, 0, 0.02),
-    0 12px 24px -4px rgba(0, 0, 0, 0.04);
+    0 4px 6px -1px rgba(0, 0, 0, 0.4),
+    0 12px 24px -4px rgba(0, 0, 0, 0.6);
 }
 
 /* ─── Card interactions ─── */

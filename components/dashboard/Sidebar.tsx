@@ -3,11 +3,13 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { MessageSquare, Settings, CreditCard, Menu, X, Zap } from 'lucide-react';
+import { LayoutDashboard, MessageSquare, Send, Settings, CreditCard, Menu, X, Zap } from 'lucide-react';
 import { UserButton } from '@clerk/nextjs';
 
 const navItems = [
+  { href: '/dashboard', label: 'Overview', icon: LayoutDashboard },
   { href: '/dashboard/conversations', label: 'Conversations', icon: MessageSquare },
+  { href: '/dashboard/campaigns', label: 'Campaigns', icon: Send },
   { href: '/dashboard/settings', label: 'Settings', icon: Settings },
   { href: '/dashboard/billing', label: 'Billing', icon: CreditCard },
 ];
@@ -61,7 +63,10 @@ export function Sidebar() {
         {/* Nav links */}
         <nav className="flex-1 space-y-1 px-3 py-4">
           {navItems.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+            const isExactDashboard = item.href === '/dashboard';
+            const isActive = isExactDashboard
+              ? pathname === '/dashboard'
+              : pathname === item.href || pathname.startsWith(item.href + '/');
             const Icon = item.icon;
             return (
               <Link
