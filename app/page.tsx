@@ -85,7 +85,7 @@ export default function Home() {
               className="text-5xl font-extrabold leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl [font-family:var(--font-outfit)]"
             >
               We text your missed <br className="hidden lg:block"/>
-              <span className="text-blue-500">calls</span> so you don't <br className="hidden lg:block"/>
+              <span className="text-purple-500">calls</span> so you don't <br className="hidden lg:block"/>
               lose the job.
             </motion.h1>
 
@@ -130,7 +130,7 @@ export default function Home() {
              transition={{ duration: 0.8, delay: 0.2, type: "spring", bounce: 0.3 }}
              className="flex-1 w-full max-w-[400px] lg:max-w-none relative z-20"
           >
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-blue-500/20 blur-[100px] rounded-full -z-10" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-purple-500/30 blur-[100px] rounded-full -z-10" />
             <PhoneSimulator />
           </motion.div>
 
@@ -215,7 +215,7 @@ export default function Home() {
             <ul className="space-y-4">
               {["Unlimited AI Text Responses", "Dedicated Twilio Phone Number", "Zero-Code Live Dashboard", "Priority Email Support"].map((f) => (
                 <li key={f} className="flex items-center gap-3 text-base text-zinc-200 font-medium justify-center">
-                  <CheckCircle2 className="h-5 w-5 shrink-0 text-blue-500" />
+                  <CheckCircle2 className="h-5 w-5 shrink-0 text-purple-500" />
                   {f}
                 </li>
               ))}
@@ -223,7 +223,7 @@ export default function Home() {
 
             <Link
               href="/dashboard/settings"
-              className="mt-10 flex w-full items-center justify-center gap-2 rounded-2xl bg-blue-600 hover:bg-blue-500 p-4 text-lg font-bold text-white shadow-lg shadow-blue-600/20 transition-all duration-300 active:scale-[0.98]"
+              className="mt-10 flex w-full items-center justify-center gap-2 rounded-2xl bg-purple-600 hover:bg-purple-500 p-4 text-lg font-bold text-white shadow-lg shadow-purple-600/20 transition-all duration-300 active:scale-[0.98]"
             >
               Start Free Trial
             </Link>

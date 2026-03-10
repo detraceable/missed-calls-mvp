@@ -3,15 +3,18 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, MessageSquare, Send, Settings, CreditCard, Menu, X, Zap } from 'lucide-react';
+import { LayoutDashboard, MessageSquare, Send, Settings, CreditCard, Menu, X, Zap, BarChart3, Blocks, LifeBuoy } from 'lucide-react';
 import { UserButton } from '@clerk/nextjs';
 
 const navItems = [
   { href: '/dashboard', label: 'Overview', icon: LayoutDashboard },
   { href: '/dashboard/conversations', label: 'Conversations', icon: MessageSquare },
   { href: '/dashboard/campaigns', label: 'Campaigns', icon: Send },
-  { href: '/dashboard/settings', label: 'Settings', icon: Settings },
+  { href: '/dashboard/analytics', label: 'Analytics', icon: BarChart3 },
+  { href: '/dashboard/integrations', label: 'Integrations', icon: Blocks },
   { href: '/dashboard/billing', label: 'Billing', icon: CreditCard },
+  { href: '/dashboard/settings', label: 'Settings', icon: Settings },
+  { href: '/dashboard/support', label: 'Help & Support', icon: LifeBuoy },
 ];
 
 export function Sidebar() {

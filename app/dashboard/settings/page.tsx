@@ -3,7 +3,7 @@ import { BusinessRow } from '@/types/dashboard';
 import { updateBusinessSettings } from '@/app/actions/settings';
 import { ToggleSwitch } from '@/components/dashboard/ToggleSwitch';
 import { SubmitButton } from '@/components/dashboard/SubmitButton';
-import { Settings, Shield } from 'lucide-react';
+import { Settings, Shield, Bell, Monitor } from 'lucide-react';
 import { auth } from '@clerk/nextjs/server';
 
 export const dynamic = 'force-dynamic';
@@ -130,6 +130,52 @@ export default async function SettingsPage() {
                 </span>
               </p>
             </div>
+          </div>
+        </div>
+
+        {/* Notification Preferences Card */}
+        <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-6">
+          <div className="mb-5 flex items-center gap-2">
+            <Bell className="h-4 w-4 text-zinc-400" />
+            <h2 className="text-sm font-semibold tracking-tight text-zinc-200">Notification Preferences</h2>
+          </div>
+          <div className="space-y-4">
+            <ToggleSwitch
+              name="emailNotifications"
+              defaultChecked={true}
+              label="Email Notifications"
+              description="Receive daily summaries and billing updates via email."
+            />
+            <div className="h-px bg-white/[0.06] my-4" />
+            <ToggleSwitch
+              name="smsAlerts"
+              defaultChecked={false}
+              label="SMS Lead Alerts"
+              description="Get a text message immediately when a new hot lead is captured."
+            />
+          </div>
+        </div>
+
+        {/* Display Settings Card */}
+        <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-6">
+          <div className="mb-5 flex items-center gap-2">
+            <Monitor className="h-4 w-4 text-zinc-400" />
+            <h2 className="text-sm font-semibold tracking-tight text-zinc-200">Display & Localization</h2>
+          </div>
+          <div>
+            <label className="text-[11px] font-medium uppercase tracking-wider text-zinc-600 block mb-2">Timezone</label>
+            <select
+              name="timezone"
+              defaultValue="America/New_York"
+              className="w-full sm:w-1/2 rounded-lg border border-white/[0.06] bg-white/[0.03] px-4 py-2.5 text-sm text-zinc-200 focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30 outline-none"
+            >
+              <option value="America/Los_Angeles">Pacific Time (PT)</option>
+              <option value="America/Denver">Mountain Time (MT)</option>
+              <option value="America/Chicago">Central Time (CT)</option>
+              <option value="America/New_York">Eastern Time (ET)</option>
+              <option value="Europe/London">London (GMT)</option>
+            </select>
+            <p className="mt-2 text-xs text-zinc-500">Reports and timestamps will be displayed in this timezone.</p>
           </div>
         </div>
 
