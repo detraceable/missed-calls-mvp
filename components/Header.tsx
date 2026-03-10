@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Menu, X, Zap } from "lucide-react";
-import { SignInButton, SignUpButton, useAuth } from "@clerk/nextjs";
+import { SignInButton, SignUpButton, Show } from "@clerk/nextjs";
 
 const NAV = [
   { href: "/", label: "Home" },
@@ -19,7 +19,6 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const { isSignedIn } = useAuth();
   
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -63,25 +62,24 @@ export function Header() {
               </Link>
             );
           })}
-          {!isSignedIn ? (
-            <>
-              <SignInButton mode="modal">
-                <button className="text-[13px] font-semibold text-slate-300 transition-colors hover:text-white">Log in</button>
-              </SignInButton>
-              <SignUpButton mode="modal">
-                <button className="rounded-xl bg-white/[0.9] px-5 py-2 text-[13px] font-semibold text-zinc-900 shadow-md shadow-white/5 transition-all duration-300 hover:bg-white hover:shadow-lg hover:shadow-white/10 active:scale-[0.97]">
-                  Sign Up Free
-                </button>
-              </SignUpButton>
-            </>
-          ) : (
+          <Show when="signed-out">
+            <SignInButton mode="modal">
+              <button className="text-[13px] font-semibold text-slate-300 transition-colors hover:text-white">Log in</button>
+            </SignInButton>
+            <SignUpButton mode="modal">
+              <button className="rounded-xl bg-white/[0.9] px-5 py-2 text-[13px] font-semibold text-zinc-900 shadow-md shadow-white/5 transition-all duration-300 hover:bg-white hover:shadow-lg hover:shadow-white/10 active:scale-[0.97]">
+                Sign Up Free
+              </button>
+            </SignUpButton>
+          </Show>
+          <Show when="signed-in">
             <Link
               href="/dashboard/settings"
               className="rounded-xl bg-white/[0.9] px-5 py-2 text-[13px] font-semibold text-zinc-900 shadow-md shadow-white/5 transition-all duration-300 hover:bg-white hover:shadow-lg hover:shadow-white/10 active:scale-[0.97]"
             >
               Dashboard
             </Link>
-          )}
+          </Show>
         </nav>
 
         <button
@@ -114,7 +112,7 @@ export function Header() {
                 </Link>
               );
             })}
-            {!isSignedIn ? (
+            <Show when="signed-out">
               <div className="mt-2 flex flex-col gap-2">
                 <SignInButton mode="modal">
                   <button onClick={() => setMobileOpen(false)} className="rounded-xl border border-white/10 bg-transparent px-4 py-3 text-center text-sm font-semibold text-white">Log in</button>
@@ -123,7 +121,8 @@ export function Header() {
                   <button onClick={() => setMobileOpen(false)} className="rounded-xl bg-white/[0.9] px-4 py-3 text-center text-sm font-semibold text-zinc-900">Sign Up Free</button>
                 </SignUpButton>
               </div>
-            ) : (
+            </Show>
+            <Show when="signed-in">
               <Link
                 href="/dashboard/settings"
                 onClick={() => setMobileOpen(false)}
@@ -131,7 +130,7 @@ export function Header() {
               >
                 Dashboard
               </Link>
-            )}
+            </Show>
           </nav>
         </div>
       )}

@@ -39,18 +39,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
       <html lang="en">
         <body
           className={`${inter.variable} ${outfit.variable} font-sans antialiased`}
         >
-          <Header />
-          {children}
-          <Footer />
-          <StickySmsWidget />
-          <Analytics />
+          <ClerkProvider>
+            <Header />
+            {children}
+            <Footer />
+            <StickySmsWidget />
+            <Analytics />
+          </ClerkProvider>
         </body>
       </html>
-    </ClerkProvider>
   );
 }
