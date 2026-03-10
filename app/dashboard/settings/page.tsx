@@ -30,14 +30,14 @@ export default async function SettingsPage() {
 
   // Find their business
   let businesses = await db<BusinessRow[]>`
-    SELECT * FROM businesses WHERE owner_id = ${userId}
+    SELECT * FROM businesses WHERE owner_id = ${userId}::text
   `;
 
   // Auto-provision a business for new users just to make the MVP smooth
   if (!businesses.length) {
     businesses = await db<BusinessRow[]>`
       INSERT INTO businesses (owner_id, name, default_system_prompt)
-      VALUES (${userId}, 'My New Business', 'You are a helpful AI receptionist.')
+      VALUES (${userId}::text, 'My New Business', 'You are a helpful AI receptionist.')
       RETURNING *
     `;
   }

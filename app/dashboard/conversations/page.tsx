@@ -26,7 +26,7 @@ export default async function ConversationsPage() {
   }
 
   const businesses = await db<BusinessRow[]>`
-    SELECT id FROM businesses WHERE owner_id = ${userId} LIMIT 1
+    SELECT id FROM businesses WHERE owner_id = ${userId}::text LIMIT 1
   `;
   const userBusinessId = businesses.length > 0 ? businesses[0].id : null;
 
